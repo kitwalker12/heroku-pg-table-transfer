@@ -6,8 +6,8 @@ class Heroku::Command::Pg < Heroku::Command::Base
   #
   # transfer data between databases
   def transfer_tables
-    from = options[:from] || ENV["FROM_URL"] || env["FROM_URL"] || "DATABASE"
-    to   = options[:to]   || ENV["TO_URL"] || env["TO_URL"]
+    from = options[:from] || ENV["FROM_URL"] || "DATABASE"
+    to   = options[:to]   || ENV["TO_URL"]
     tables = (options[:tables] || "").split(",")
 
     error <<-ERROR unless to
@@ -33,22 +33,6 @@ https://devcenter.heroku.com/articles/config-vars#local_setup
   end
 
 private
-
-  def env
-    @env ||= begin
-      File.read(".env").split("\n").inject({}) do |hash, line|
-        if line =~ /\A([A-Za-z_0-9]+)=(.*)\z/
-          key, val = [$1, $2]
-          case val
-            when /\A'(.*)'\z/ then hash[key] = $1
-            when /\A"(.*)"\z/ then hash[key] = $1.gsub(/\\(.)/, '\1')
-            else hash[key] = val
-          end
-        end
-        hash
-      end
-    end
-  end
 
   def pg_dump_command(url, tables)
     uri = URI.parse(url)

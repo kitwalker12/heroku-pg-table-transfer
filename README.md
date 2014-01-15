@@ -20,6 +20,4 @@ $heroku pg:transfer_tables
   --tables tables # comma-separated list of tables
 
 $ env FROM_URL=postgres://localhost/myapp-development TO_URL=postgres://heroku.com/herokudb heroku pg:transfer_tables --tables my_tables
-
-$ source .env && heroku pg:transfer_tables --from $FROM_URL --to $TO_URL --tables my_tables
 ```
